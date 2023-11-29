@@ -62,6 +62,13 @@ Vocab::Id llama_sample_top_p_top_k(
 
     sample_top_k(logits_id, top_k);
 
+    // printf("[debug] top_k=%d, top_p=%f, temp=%f, repeat_penalty=%f\n", top_k, top_p,
+    //        temp, repeat_penalty);
+    // printf("[debug] logits_id size=%d\n", (int)logits_id.size());
+    // for (const auto& kv : logits_id) {
+    //     printf("[debug] %s: %f\n", vocab.id_to_token[kv.second].tok.c_str(), kv.first);
+    // }
+
     double maxl = -INFINITY;
     for (const auto& kv : logits_id) {
         maxl = std::max(maxl, kv.first);
@@ -77,6 +84,13 @@ Vocab::Id llama_sample_top_p_top_k(
         probs.push_back(p);
         sum += p;
     }
+
+    // printf("[debug] sum=%f\n", sum);
+    // printf("[debug] probs size=%d: ", (int)probs.size());
+    // for (const auto& prob: probs) {
+    //     printf("%.3f ", prob);
+    // }
+    // printf("\n");
 
     // normalize the probs
     for (auto& p : probs) {

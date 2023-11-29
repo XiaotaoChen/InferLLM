@@ -127,6 +127,11 @@ void GgmlLlamaGraph::construct_llm() {
     uint32_t ctx = m_param.n_ctx;
     uint32_t n_vocab = m_param.n_vocab;
 
+    printf("[debug] ggml llama graph name: %s, embd = %u, mult = %u, head = %u, rot = %u, ctx = %u, n_vocab = %u\n", 
+            name().c_str(), embd, mult, head, rot, ctx, n_vocab);
+
+    printf("[debug] model_config compType: %d\n", model_config().compt_type);
+
     size_t nff = ((2 * (4 * embd) / 3 + mult - 1) / mult) * mult;
     m_input = std::make_shared<Tensor>(device(), name() + ":input");
     std::shared_ptr<Tensor> input = m_input;
@@ -172,4 +177,10 @@ void GgmlLlamaGraph::construct_llm() {
     //! the last layer
     m_output = add_module<HeadModule>(
             this, input, embd, n_vocab, model_config(), device(), "head");
+
+
+    printf("[debug] module size: %d\n", m_modules.size());
+    for (const auto& m : m_modules) {
+        printf("[debug] module name: %s\n", m->name().c_str());
+    }
 }

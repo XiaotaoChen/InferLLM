@@ -22,6 +22,13 @@ void ModelImp::load(const std::string& model_path) {
 void ModelImp::prefill(const std::string& promote) {
     auto tokens = tokenize(promote, true);
     m_graph->post_tokenize(tokens);
+
+    // print the tokens
+    printf("[debug] prefill tokens size: %d\n", tokens.size());
+    for (auto& idx: tokens) {
+        printf("[debug] %d:%s\n", idx, m_vocab->id_to_token[idx].tok.c_str());
+    }
+
     for (auto token : tokens) {
         m_last_queue.push_back(token);
         m_last_queue.pop_front();
@@ -36,6 +43,12 @@ void ModelImp::prefill(const std::string& promote) {
 //! decode the user input sentence
 std::string ModelImp::decode(const std::string& user_input, int& token) {
     auto tokens = tokenize(user_input, false);
+
+    printf("[debug] decode tokens size: %d\n", tokens.size());
+    for (auto& idx: tokens) {
+        printf("[debug] %d:%s\n", idx, m_vocab->id_to_token[idx].tok.c_str());
+    }
+
     m_graph->post_tokenize(tokens);
     for (auto token : tokens) {
         m_last_queue.push_back(token);
@@ -68,6 +81,9 @@ int32_t ModelImp::sample_and_update() {
    auto token = llama_sample_top_p_top_k(
            *m_vocab, m_logist.data(), m_last_queue, m_repeat_penalty, m_top_k, m_top_p,
            m_temp, m_rng);
+
+    printf("[debug] sample_and_update token: %d, val: %s\n", token, m_vocab->id_to_token[token].tok.c_str());
+
     // update the last queue
     m_last_queue.push_back(token);
     m_last_queue.pop_front();

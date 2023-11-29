@@ -185,6 +185,8 @@ void Graph::execute(
     INFER_ASSERT(
             m_output->length() == logist.size(),
             "output length is not match with logist size");
+    // printf("[debug] m_modules size: %d\n", m_modules.size());
+
     for (size_t i = 0; i < m_modules.size(); i++) {
         m_modules[i]->execute(m_workspace.get(), nr_past, prefill);
     }

@@ -405,6 +405,15 @@ void LlamaAttention::execute(WorkSpace* workspace, uint32_t nr_past) {
 
     uint32_t size = workspace->length();
 
+
+    // tensor shape
+    // input: [seqlen, embd]
+    // p_outv, p_outk, p_outq: [seqlen, embd]
+    // p_totalk, p_totalv: [n_past+seqlen, head, embd/head]
+    // qk_out: [head, seqlen, n_past+seqlen]
+    // out: [seqlen, embd]
+
+
     void* q_out = static_cast<void*>(static_cast<char*>(p_work) + matmul_size);
     void* qk_out = static_cast<void*>(
             static_cast<char*>(q_out) + seqlen * m_embd * sizeof(float));
