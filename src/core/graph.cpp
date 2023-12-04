@@ -207,6 +207,18 @@ void Graph::collect_weights() {
     //! collect all the weights
     for (auto module : m_modules) {
         auto all_weights = module->get_all_weights();
+        // show weight info
+        printf("==== [debug] module name: %s, weight size: %d ====\n", 
+                module->name().c_str(), all_weights.size());
+        for (auto weight : all_weights) {
+            printf("[debug] weight name: %s, size: %d, shape: ", 
+                    weight->name().c_str(), weight->length());
+            for (auto& dim : weight->shape()) {
+                printf("%d ", dim);
+            }
+            printf("\n");
+        }
+
         for (auto weight : all_weights) {
             std::string name = weight->name();
             INFER_ASSERT(m_weights_map.count(name) == 0, "dumplicated weight.");

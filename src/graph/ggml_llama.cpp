@@ -72,6 +72,9 @@ void GgmlLlamaGraph::load(
     //! collect all the weights from the llm graph into the weights map
     collect_weights();
 
+    // show all weight ifno
+    INFER_LOG("========== [debug] weight size: %d\n", m_weights_map.size());
+
     //! read or mmap all the weights from the model file
     set_weights_alias();
     size_t weight_length = 0;
